@@ -50,8 +50,7 @@ payload = {
         }
     ],
     'streamIds': [
-        '1d9a8797-b222-42fc-917a-b26a2b332cb8',
-        '1d9a8797-b222-42fc-917a-b26a2b332cb8-hard-braking'
+        '<STREAM_ID>'
     ],
     'groupByTime': {
         'timeBucketDuration': 100000000,
