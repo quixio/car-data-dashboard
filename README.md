@@ -4,6 +4,19 @@ Simple example how to present data in Quix Data catalogue using Plotly and Dash 
  
 [![](doc/car-demo-dashboard.svg)](doc/car-demo-dashboard.svg "Architecture") 
 
+## Installation
+In your terminal, install several **dash** libraries.
+```python
+pip install dash
+```
+
+We also going to need *requests* library.
+In your terminal, install several **dash** libraries.
+```python
+pip install requests
+```
+
+## Getting data from Quix
 First we need to get data into Python using Data catalogue API and Connect feature of portal. 
 
 **Steps**:
@@ -86,23 +99,30 @@ fig.add_trace(
 
 Then we build page with HTML:
 ```python
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.layout = html.Div(children=[
+    html.H1(children='Hello from Quix'),
 
-# We add secondary y axe to accommodate second parameter.
-fig = make_subplots(specs=[[{"secondary_y": True}]])
+    html.Div(children='''
+        Example dashboard with Dash and Quix.
+    '''),
 
-# Add series into plot for speed.
-fig.add_trace(
-    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["Speed"].to_numpy(), name="Speed"),
-    secondary_y=False,
-)
-
-# Add series into plot for engine RPM.
-fig.add_trace(
-    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["EngineRPM"].to_numpy(), name="EngineRPM"),
-    secondary_y=True,
-)
+    dcc.Graph(
+        id='example-graph',
+        figure=fig
+    )
+])
 ```
 
+Last part is to run server and set the port to **80** so you can host the dashboard in Quix.
+```python
+if __name__ == '__main__':
+    # It is important to set port 80 to host this dashboard in Quix
+    app.run_server(debug=True, host="0.0.0.0", port=80)
+```
+
+### Local test
+Test this dashboard by running python script and going to [http://localhost/](http://localhost/) in your browser.
+
+## Quix deployment
+You can deploy this dashboard in Quix. Please follow our documentation [here](https://documentation.platform.quix.ai/deploy/). Please pay attention to **Public access** paragraph.
 
