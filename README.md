@@ -65,7 +65,44 @@ df["Timestamp"] = df["Timestamp"].apply(lambda x: datetime.datetime.fromtimestam
 With data in data frame we initiate graph using Plotly.
 
 ```python
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
+# We add secondary y axe to accommodate second parameter.
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add series into plot for speed.
+fig.add_trace(
+    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["Speed"].to_numpy(), name="Speed"),
+    secondary_y=False,
+)
+
+# Add series into plot for engine RPM.
+fig.add_trace(
+    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["EngineRPM"].to_numpy(), name="EngineRPM"),
+    secondary_y=True,
+)
+```
+
+Then we build page with HTML:
+```python
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+# We add secondary y axe to accommodate second parameter.
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+# Add series into plot for speed.
+fig.add_trace(
+    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["Speed"].to_numpy(), name="Speed"),
+    secondary_y=False,
+)
+
+# Add series into plot for engine RPM.
+fig.add_trace(
+    go.Scatter(x=df["Timestamp"].to_numpy(), y=df["EngineRPM"].to_numpy(), name="EngineRPM"),
+    secondary_y=True,
+)
 ```
 
 
