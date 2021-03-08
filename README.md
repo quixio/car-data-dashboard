@@ -1,5 +1,5 @@
 # Car data dashboard
-Simple example how to present data in Quix Data catalogue using Plotly and Dash library in Python.
+A simple example of how to present data in Quix Data catalogue using Plotly and Dash library in Python.
 
  
 [![](doc/car-demo-dashboard.svg)](doc/car-demo-dashboard.svg "Architecture") 
@@ -17,12 +17,12 @@ pip install requests
 ```
 
 ## Getting data from Quix
-First we need to get data into Python using Data catalogue API and Connect feature of portal. 
+First, we need to get data into Python using Data catalogue API and Connect feature of the portal. 
 
 **Steps**:
-1) Go to Visualize in portal and select data to visualize. 
+1) Go to Visualize in the portal and select data to visualize. 
 2) Click Connect button
-3) Select Python as language
+3) Select Python as a language
 4) Copy code to your dashboard project
 
 ## Code example
@@ -68,20 +68,20 @@ df = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
 We do some handy transformations to help the visualization.
 
 ```python
-# We convert boolean parameter to numeric to represent value in graph.
+# We convert the boolean parameter to numeric to represent the value in the graph.
 df["first(HardBraking)"] = df["first(HardBraking)"].apply(lambda x: 1 if x is True else 0)
 
 # We convert nanoseconds epoch to datetime for better readability. 
 df["Timestamp"] = df["Timestamp"].apply(lambda x: datetime.datetime.fromtimestamp(x / (1000 * 1000 * 1000)))
 ```
 
-With data in data frame we initiate graph using Plotly.
+With data in the data frame, we initiate the graph using Plotly.
 
 ```python
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-# We add secondary y axe to accommodate second parameter.
+# We add secondary y axe to accommodate the second parameter.
 fig = make_subplots(specs=[[{"secondary_y": True}]])
 
 # Add series into plot for speed.
@@ -113,7 +113,7 @@ app.layout = html.Div(children=[
 ])
 ```
 
-Last part is to run server and set the port to **80** so you can host the dashboard in Quix.
+The last part is to run a server and set the port to **80** so you can host the dashboard in Quix.
 ```python
 if __name__ == '__main__':
     # It is important to set port 80 to host this dashboard in Quix
@@ -121,8 +121,7 @@ if __name__ == '__main__':
 ```
 
 ### Local test
-Test this dashboard by running python script and going to [http://localhost/](http://localhost/) in your browser.
+Test this dashboard by running the python script and going to [http://localhost/](http://localhost/) in your browser.
 
 ## Quix deployment
 You can deploy this dashboard in Quix. Please follow our documentation [here](https://documentation.platform.quix.ai/deploy/). Please pay attention to **Public access** paragraph.
-
