@@ -10,7 +10,7 @@ In your terminal, install several **dash** libraries.
 pip install dash
 ```
 
-We also going to need *requests* library.
+We also going to need **requests** library.
 In your terminal, install several **dash** libraries.
 ```python
 pip install requests
