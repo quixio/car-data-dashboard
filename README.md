@@ -1,5 +1,5 @@
 # Car data dashboard
-A simple example of how to present data in Quix Data catalogue using Plotly and Dash library in Python.
+A simple example of how to visualize data in Quix Data catalogue using Plotly and Dash library in Python.
 
  
 [![](doc/car-demo-dashboard.svg)](doc/car-demo-dashboard.svg "Architecture") 
