@@ -19,8 +19,8 @@ pip install requests
 First, we need to get data into Python using Data catalogue API and Connect feature of the portal. 
 
 **Steps**:
-1) Go to Visualize in the portal and select data to visualize. If you don't have any data, use another code example [car-data-sample](https://github.com/quixai/car-data-sample)
-2) Click Connect button
+1) Go to Visualize in the portal and select data to visualize. If you don't have any data in data cataloque, use another code example [car-data-sample](https://github.com/quixai/car-data-sample)
+2) Click **Connect** button
 3) Select Python as a language
 4) Copy code to your dashboard project
 
