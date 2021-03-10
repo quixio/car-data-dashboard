@@ -1,6 +1,10 @@
-# Car data dashboard
-A simple example of how to visualize data in Quix Data catalogue using Plotly and Dash library in Python.
+#  Car data dashboard
 
+## Introduction
+This is an example of how to build and deploy a frontend that will continuously display live data processed in Quix. The frontend is a simple website, available on a public URL, that is built using the Python libraries Plotly and Dash.
+ 
+## Architecture
+The dashboard will 
  
 [![](doc/car-demo-dashboard.svg)](doc/car-demo-dashboard.svg "Architecture") 
 
