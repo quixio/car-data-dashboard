@@ -10,8 +10,8 @@ import plotly.graph_objects as go
 import traceback
 
 def load_data():
-    url = "https://telemetry-query-quix-testdavid.platform.quix.ai/parameters/data"
-    token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qVTBRVE01TmtJNVJqSTNOVEpFUlVSRFF6WXdRVFF4TjBSRk56SkNNekpFUWpBNFFqazBSUSJ9.eyJodHRwczovL3F1aXguYWkvcm9sZXMiOiJhZG1pbiBRdWl4QWRtaW4iLCJodHRwczovL3F1aXguYWkvb3JnX2lkIjoicXVpeCIsImlzcyI6Imh0dHBzOi8vbG9naWNhbC1wbGF0Zm9ybS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8YmNmZmZhNjItMTVhNC00OWVjLTk5YTQtZDUyOTk5MGQ3YjUxIiwiYXVkIjpbInF1aXgiLCJodHRwczovL2xvZ2ljYWwtcGxhdGZvcm0uZXUuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTYxODM5MzQ5NSwiZXhwIjoxNjIwOTg1NDk1LCJhenAiOiIwem1XZkpka2l1R1BpSld5cFNDQThyS2FWdmZQREtMSSIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6W119.KnQv8w2o7nPifoPgLZmgwWLsceIgkRu0NmDQLefDIfgq6yeHa1yaBQaoUH4qdmUBdhVx5cJZ5Usq4gzM3KYcDfDBo5DDctOMHG4j7LQZTEzV4q1OF_r0IENgm3qAh5TpRSX4RfU-N17jyE4XoSH_IsyiPjla7gUS3mG0lGwGqFOpU9Ons1q9S_22OQemcXbj9rR39DboII05oZc2ylfrZHTB9aiaId-XDcptGJkGD5-qjliabIe-KwfqET9afqR17c-6iW79MjqGKEyBpfHFTdUsJjYMvXqWTiCiaohIDyr0V5GBdSA55ygUZF_YkToO2TIXDdw3LPKpnQOZbUza2Q"
+    url = "https://telemetry-query-{placeholder:workspaceid}.platform.quix.ai/parameters/data"
+    token = "{placeholder:token}"
     head = {'Authorization': 'Bearer {}'.format(token), 'Accept': "application/csv"}
     payload = {
         'numericParameters': [
