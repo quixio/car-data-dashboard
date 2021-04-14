@@ -1,43 +1,76 @@
-from datetime import datetime
+import requests
+import io
+import datetime
+import dash  # (version 1.12.0)
+from dash.dependencies import Input, Output
+import dash_core_components as dcc
+import dash_html_components as html
 import pandas as pd
+import plotly.graph_objects as go
+import traceback
 
-from quixstreaming import *
+def load_data():
+    url = "https://telemetry-query-quix-testdavid.platform.quix.ai/parameters/data"
+    token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1qVTBRVE01TmtJNVJqSTNOVEpFUlVSRFF6WXdRVFF4TjBSRk56SkNNekpFUWpBNFFqazBSUSJ9.eyJodHRwczovL3F1aXguYWkvcm9sZXMiOiJhZG1pbiBRdWl4QWRtaW4iLCJodHRwczovL3F1aXguYWkvb3JnX2lkIjoicXVpeCIsImlzcyI6Imh0dHBzOi8vbG9naWNhbC1wbGF0Zm9ybS5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8YmNmZmZhNjItMTVhNC00OWVjLTk5YTQtZDUyOTk5MGQ3YjUxIiwiYXVkIjpbInF1aXgiLCJodHRwczovL2xvZ2ljYWwtcGxhdGZvcm0uZXUuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTYxODM5MzQ5NSwiZXhwIjoxNjIwOTg1NDk1LCJhenAiOiIwem1XZkpka2l1R1BpSld5cFNDQThyS2FWdmZQREtMSSIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgZW1haWwiLCJwZXJtaXNzaW9ucyI6W119.KnQv8w2o7nPifoPgLZmgwWLsceIgkRu0NmDQLefDIfgq6yeHa1yaBQaoUH4qdmUBdhVx5cJZ5Usq4gzM3KYcDfDBo5DDctOMHG4j7LQZTEzV4q1OF_r0IENgm3qAh5TpRSX4RfU-N17jyE4XoSH_IsyiPjla7gUS3mG0lGwGqFOpU9Ons1q9S_22OQemcXbj9rR39DboII05oZc2ylfrZHTB9aiaId-XDcptGJkGD5-qjliabIe-KwfqET9afqR17c-6iW79MjqGKEyBpfHFTdUsJjYMvXqWTiCiaohIDyr0V5GBdSA55ygUZF_YkToO2TIXDdw3LPKpnQOZbUza2Q"
+    head = {'Authorization': 'Bearer {}'.format(token), 'Accept': "application/csv"}
+    payload = {
+        'numericParameters': [
+            {
+                'parameterName': 'Speed',
+                'aggregationType': 'None'
+            }
+        ],
+        'streamIds': [
+        ],
+        'groupBy': []
+    }
 
-# Create a client factory. Factory helps you create StreamingClient (see below) a little bit easier
-security = SecurityOptions('../certificates/ca.cert', "quixdev-textprocessingbench", "0XfH3dwvcIoYHLIpI2o4gm28jfPWJlCmiBy")
-client = StreamingClient('kafka-k1.quix.ai:9093,kafka-k2.quix.ai:9093,kafka-k3.quix.ai:9093', security)
+    response = requests.post(url, headers=head, json=payload)
 
-# Open output topic connection.
-output_topic = client.open_output_topic('quixdev-textprocessingbench-lorem')
+    panda_frame = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
 
-# Create a new stream. A stream is a collection of data that belong to a single session of a single source.
-# For example single car journey.
-# If you don't specify stream id, random guid is generated.
-# Specify it if you want append data into the stream later.
-# stream = output_topic.create_stream("my-own-stream-id")
-stream = output_topic.create_stream()
+    if panda_frame.size > 0:
+        # We convert nanoseconds epoch to datetime for better readability.
+        panda_frame["Timestamp"] = panda_frame["Timestamp"].apply(lambda x: str(datetime.datetime.fromtimestamp(x / 1000000000)))
+    return panda_frame
 
-# Give the stream human readable name. This name will appear in data catalogue.
-stream.properties.name = "cardata"
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-# Save stream in specific folder in data catalogue to help organize your workspace.
-stream.properties.location = "/static data"
+app.layout = html.Div(children=[
+    html.H1(children='Test dashboard'),
+    html.Div(children='''
+        Car speed
+    '''),
+    dcc.Graph(
+        id='graph',
 
-# Add stream metadata to add context to time series data.
-stream.properties.metadata["circuit"] = "Sakhir Short"
-stream.properties.metadata["player"] = "Swal"
-stream.properties.metadata["game"] = "Codemasters F1 2019"
+    ),
+    dcc.Interval(
+        id='interval_component',
+        interval=5000,
+        n_intervals=0,
+        
+    )
+])
 
-df = pd.read_csv("cardata.csv")
 
-# Add TAG__ prefix to column LapNumber to use this column as tag (index).
-df = df.rename(columns={"LapNumber" : "TAG__LapNumber" })
+@app.callback(Output('graph', 'figure'), [Input('interval_component', 'n_intervals')])
+def update_data(n_intervals):
+    try:
+        data = load_data()
 
-# Write data frame to output topic.
-stream.parameters.write(df)
+        scatter = go.Scatter(x=data["Timestamp"].to_numpy(), y=data["Speed"].to_numpy())
 
-print("Closing stream")
+        # tuple is (dict of new data, target trace index, number of points to keep)
+        fig = go.Figure(
+            data=[scatter]
+        )
+        return fig
 
-# Stream can be infinitely long or have start and end.
-# If you send data into closed stream, it is automatically opened again.
-stream.close()
+    except Exception:
+        print(traceback.format_exc())
+
+
+if __name__ == '__main__':
+    app.run_server(debug=True, host="0.0.0.0", port=80)
