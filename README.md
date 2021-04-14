@@ -111,3 +111,6 @@ Test this dashboard by running the python script and going to [http://localhost/
 
 ## Quix deployment
 You can deploy this dashboard in Quix. Please follow our documentation [here](https://documentation.platform.quix.ai/deploy/). Please pay attention to **Public access** paragraph.
+
+## Full code example:
+[source/main.py](source/main.py)
