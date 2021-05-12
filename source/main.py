@@ -27,12 +27,12 @@ def load_data():
 
     response = requests.post(url, headers=head, json=payload)
 
-    panda_frame = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
+    df = pd.read_csv(io.StringIO(response.content.decode('utf-8')))
 
-    if panda_frame.size > 0:
+    if df.size > 0:
         # We convert nanoseconds epoch to datetime for better readability.
-        panda_frame["Timestamp"] = panda_frame["Timestamp"].apply(lambda x: str(datetime.datetime.fromtimestamp(x / 1000000000)))
-    return panda_frame
+        df["Timestamp"] = df["Timestamp"].apply(lambda x: str(datetime.datetime.fromtimestamp(x / 1000000000)))
+    return df
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
